@@ -1,5 +1,5 @@
 ### Developer Specific ###
-user_stories.*
+#user_stories.*
 
 # selenium
 **/geckodriver.log
