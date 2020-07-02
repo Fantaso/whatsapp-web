@@ -19,7 +19,7 @@
 ---
 # GOAL
 (1) - Simon can detect new message(s), read them, analyse it and reply if needed.
-Simon can detect when new message is from a fresh(newly) contact, send a welcome message with a menu with FAQ.
+(2) - Simon can detect when new message is from a fresh(newly) contact, send a welcome message with a menu with FAQ.
 
 
 ---
