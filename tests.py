@@ -1,6 +1,6 @@
 import unittest
 from selenium import webdriver
-import page
+from simon import page
 
 
 class PythonOrgSearch(unittest.TestCase):
