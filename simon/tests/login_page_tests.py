@@ -32,15 +32,15 @@ class LoginPageTests(BaseLoginTests, TestCase):
 
 class ManualLoginTests(BaseLoginTests, TestCase):
     def test_can_login_successfully(self):
-        main_page = pages.BasePage(self.driver)
+        base_page = pages.BasePage(self.driver)
         # time for you to read QR code and access whatsapp
         time.sleep(10)
-        self.assertTrue(main_page.is_title_matches())
-        self.assertTrue(main_page.is_welcome_page_available())
-        self.assertTrue(main_page.is_nav_bar_page_available())
-        self.assertTrue(main_page.is_search_page_available())
+        self.assertTrue(base_page.is_title_matches())
+        self.assertTrue(base_page.is_welcome_page_available())
+        self.assertTrue(base_page.is_nav_bar_page_available())
+        self.assertTrue(base_page.is_search_page_available())
         # chat is only available after you click on a person to open the chat
-        self.assertFalse(main_page.is_chat_page_available())
+        self.assertFalse(base_page.is_chat_page_available())
 
 
 if __name__ == "__main__":
