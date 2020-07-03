@@ -38,3 +38,7 @@ class RememberMeCheckBox(object):
             checkbox.click()
         if value is False and checkbox.is_selected():
             checkbox.click()
+
+
+class LoginRememberMeCheckBox(RememberMeCheckBox):
+    locator = "rememberMe"
