@@ -26,21 +26,21 @@ class SearchLocators(object):
 class PaneLocators(object):
     # parent
     PANE = (By.CSS_SELECTOR, "#pane-side")
+
     # childs
     OPENED_CHATS = (By.CSS_SELECTOR, "#pane-side ._210SC")
 
     # grand child of each child
     ## left side
-    CONTACT_ICONS = (By.CSS_SELECTOR, "#pane-side ._210SC ._1BjNO")
-
+    ICON = (By.CSS_SELECTOR, "._325lp img")  # attr(src)
     ## right side
     ### upper side
-    CONTACT_NAMES = (By.CSS_SELECTOR, "#pane-side ._3dtfX ._357i8 ._3ko75")
-    LAST_MSG_TIMES = (By.CSS_SELECTOR, "#pane-side ._3dtfX .m61XR")
+    NAME = (By.CSS_SELECTOR, "._2kHpK ._3ko75._5h6Y_")
+    LAST_MESSAGE_TIME = (By.CSS_SELECTOR, "._2kHpK .m61XR")
     ### bottom side
-    ARROW_STATUSES = (By.CSS_SELECTOR, "#pane-side ._210SC ._1582E .zFnXi")
-    TRUNCATED_MSGS = (By.CSS_SELECTOR, "#pane-side ._210SC ._1582E ._2iq-U span._3ko75")
-    NEW_MESSAGE_ICONS = (By.CSS_SELECTOR, "#pane-side ._210SC ._1582E .m61XR .ZKn2B ._31gEB")
+    # ARROW_STATUS = (By.CSS_SELECTOR, "._210SC ._1582E .zFnXi")
+    LAST_MESSAGE = (By.CSS_SELECTOR, "._2kHpK ._1582E ._3Whw5")
+    NOTIFICATION = (By.CSS_SELECTOR, "._210SC .m61XR ._31gEB")
 
 
 class ChatLocators(object):
