@@ -1,34 +1,12 @@
-import time
 import unittest
-from unittest import TestCase
 
-from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-from simon import pages
 from simon.locators import ChatLocators
+from simon.tests.base import LoggedInTestCase
 
 
-class PaneBaseTestCase(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.driver = webdriver.Firefox()
-        cls.driver.maximize_window()
-
-        # Manually login in
-        cls.login_page = pages.LoginPage(cls.driver)
-        cls.login_page.load()
-        time.sleep(7)
-
-        cls.pane_page = pages.PanePage(cls.driver)
-        cls.pane_page.load()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
-
-
-class PanePageTests(PaneBaseTestCase):
+class PanePageTests(LoggedInTestCase):
     def test_can_get_opened_chats(self):
         self.assertGreaterEqual(len(self.pane_page.opened_chats), 5)
 

@@ -1,14 +1,37 @@
-# can iterate over all message in the proper order of time arrival
-# can read last message
-# can read last 5 messages
-# can read first message available
-# can read first 5 messages available
-# can send a message
+## 1st
+# can read a message's text, time, arrow, type
+# can reply to a (specific) message
+## 2nd
+# can read most recent message
+# can read 5 most recent messages
+# can read oldest message available
+# can read 5 oldest messages available
+# can iterate over all messages (default=most recent)
+## 3rd
+# can read last unread messages
+# can iterate over last unread messages
+## 4th
+# can detect if current chat is fresh (new) chat initiated by contact/client
+## 5th
+# can write and send a message
 # can send a multiline message
-# can detect if the current chat is a fresh chat created by the contact or client
+## 6th
+# can search for a message (by: text, time(approx, range), type)
+## optional
+# can send a link
+# can send an image
+# can send a video
+# can send an audio
+# can record a voice from microphone
+#######################################################
+import unittest
 
-# can detect all unread messages
-# can get the time from an unread message
-# can iterate over all unread messages in the proper order of time arrival
+from simon.tests.base import LoggedInTestCase
 
-# can reply to a specific message
+
+class ChatPageTests(LoggedInTestCase):
+    pass
+
+
+if __name__ == "__main__":
+    unittest.main()
