@@ -1,6 +1,8 @@
+import time
+
 from selenium.common.exceptions import NoSuchElementException
 
-from .elements import LoginRememberMeCheckBox
+from .elements import RememberMeCheckBox, OpenedChats
 from .locators import NavBarLocators, SearchLocators, WelcomeLocators, PaneLocators, ChatLocators
 
 
@@ -21,23 +23,26 @@ class BasePage(object):
     def is_title_matches(self):
         return "WhatsApp" in self.driver.title
 
-    # main pages
-    # def is_login_page_available(self):
-    #     if self.driver.find_element():
-    #         return True
+    def load(self):
+        self.driver.get("https://web.whatsapp.com/")
+        time.sleep(2.5)
 
+    @element_not_found
     def is_welcome_page_available(self):
         if self.driver.find_element(*WelcomeLocators.WELCOME):
             return True
 
+    @element_not_found
     def is_nav_bar_page_available(self):
         if self.driver.find_element(*NavBarLocators.BAR):
             return True
 
+    @element_not_found
     def is_search_page_available(self):
         if self.driver.find_element(*SearchLocators.SEARCH):
             return True
 
+    @element_not_found
     def is_pane_page_available(self):
         if self.driver.find_element(*PaneLocators.PANE):
             return True
@@ -46,6 +51,10 @@ class BasePage(object):
     def is_chat_page_available(self):
         if self.driver.find_element(*ChatLocators.CHAT):
             return True
+
+
+class LoginRememberMeCheckBox(RememberMeCheckBox):
+    locator = "rememberMe"
 
 
 class LoginPage(BasePage):
@@ -81,20 +90,12 @@ class SearchPage(BasePage):
 
 
 class PanePage(BasePage):
-    def is_new_message_available(self):
-        new_msgs = self.driver.find_elements(*PaneLocators.NEW_MESSAGE_ICONS)
-        if new_msgs and len(new_msgs) > 0:
-            return True
+    opened_chats = OpenedChats()
 
-    def get_new_message(self):
-        return self.driver.find_element(*PaneLocators.NEW_MESSAGE_ICONS)
-
-    def get_new_messages(self):
-        return self.driver.find_elements(*PaneLocators.NEW_MESSAGE_ICONS)
-
-    def get_opened_chats_contacts(self):
-        return [contact.text for contact in
-                self.driver.find_elements(*PaneLocators.CONTACT_NAMES)]
+    def get_first_opened_chat_with_notifications(self):
+        for chat in self.opened_chats:
+            if chat.has_notifications():
+                return chat
 
 
 class ChatPage(BasePage):
