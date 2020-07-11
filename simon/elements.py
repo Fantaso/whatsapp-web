@@ -7,8 +7,7 @@ from .locators import PaneLocators
 
 
 class ReadOnlyBaseElement(object):
-    def __init__(self, element, locators):
-        self.locators = locators
+    def __init__(self, element):
         self.element = element
 
     def __get__(self, instance, owner):
@@ -22,13 +21,16 @@ class ReadOnlyBaseElement(object):
 
 
 class ReadOnlyBaseElements(object):
+    locator = None
+    child_class = None
+
     def __get__(self, instance, owner):
         """Gets the current state of the element."""
         driver = instance.driver
         WebDriverWait(driver, 100).until(
-            lambda driver: driver.find_elements(*self.parent_locator))
-        elements = driver.find_elements(*self.parent_locator)
-        return [self.child_class(ele, self.child_locators) for ele in elements]
+            lambda driver: driver.find_elements(*self.locator))
+        elements = driver.find_elements(*self.locator)
+        return [self.child_class(ele) for ele in elements]
 
     def __set__(self, instance, values):
         raise Exception("Can not set a value to a read-only elements")
@@ -50,31 +52,31 @@ class Chat(ReadOnlyBaseElement):
     @property
     @element_not_found
     def name(self):
-        return self.element.find_element(*self.locators['name']).text
+        return self.element.find_element(*PaneLocators.NAME).text
 
     @property
     @element_not_found
     def last_message_time(self):
-        return self.element.find_element(*self.locators['last_message_time']).text
+        return self.element.find_element(*PaneLocators.LAST_MESSAGE_TIME).text
 
     @property
     @element_not_found
     def last_message(self):
-        return self.element.find_element(*self.locators['last_message']).text
+        return self.element.find_element(*PaneLocators.LAST_MESSAGE).text
 
     @property
     @element_not_found
     def icon(self):
-        return self.element.find_element(*self.locators['icon']).get_attribute('src')
+        return self.element.find_element(*PaneLocators.ICON).get_attribute('src')
 
     @property
     @element_not_found
     def notifications(self):
-        return int(self.element.find_element(*self.locators['notifications']).text)
+        return int(self.element.find_element(*PaneLocators.NOTIFICATION).text)
 
     @element_not_found
     def has_notifications(self):
-        notifications = int(self.element.find_element(*self.locators['notifications']).text)
+        notifications = int(self.element.find_element(*PaneLocators.NOTIFICATION).text)
         if notifications > 0:
             return True
 
@@ -85,16 +87,8 @@ class Chat(ReadOnlyBaseElement):
 
 
 class OpenedChats(ReadOnlyBaseElements):
-    parent_locator = PaneLocators.OPENED_CHATS
+    locator = PaneLocators.OPENED_CHATS
     child_class = Chat
-    child_locators = {
-        'name': PaneLocators.NAME,
-        'last_message_time': PaneLocators.LAST_MESSAGE_TIME,
-        'last_message': PaneLocators.LAST_MESSAGE,
-        'icon': PaneLocators.ICON,
-        'notifications': PaneLocators.NOTIFICATION,
-    }
-
 
 
 class CheckBoxException(Exception):
@@ -102,6 +96,8 @@ class CheckBoxException(Exception):
 
 
 class RememberMeCheckBox(object):
+    locator = None
+
     def __set__(self, obj, value: bool):
         """Sets the state of the checkbox."""
         if not self._is_boolean(value):
