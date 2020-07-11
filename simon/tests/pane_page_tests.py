@@ -2,11 +2,20 @@ import unittest
 
 from selenium.webdriver.common.keys import Keys
 
+from simon import pages
 from simon.locators import ChatLocators
 from simon.tests.base import LoggedInTestCase
 
 
 class PanePageTests(LoggedInTestCase):
+    driver = None
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.pane_page = pages.PanePage(cls.driver)
+        cls.pane_page.load()
+
     def test_can_get_opened_chats(self):
         self.assertGreaterEqual(len(self.pane_page.opened_chats), 5)
 
