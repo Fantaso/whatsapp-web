@@ -7,6 +7,8 @@ from simon import pages
 
 
 class LoggedInTestCase(TestCase):
+    driver = None
+
     @classmethod
     def setUpClass(cls):
         cls.driver = webdriver.Firefox()
@@ -16,9 +18,6 @@ class LoggedInTestCase(TestCase):
         cls.login_page = pages.LoginPage(cls.driver)
         cls.login_page.load()
         time.sleep(7)
-
-        cls.pane_page = pages.PanePage(cls.driver)
-        cls.pane_page.load()
 
     @classmethod
     def tearDownClass(cls):
