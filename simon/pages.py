@@ -1,8 +1,11 @@
+import os
+import pathlib
 import time
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.wait import WebDriverWait
 
-from .elements import RememberMeCheckBox, OpenedChats
+from .elements import OpenedChats, ChatMessages, MessageWriter, LoginRememberMeCheckBox
 from .locators import NavBarLocators, SearchLocators, WelcomeLocators, PaneLocators, ChatLocators
 
 
@@ -16,6 +19,13 @@ def element_not_found(func):
     return wrapper
 
 
+def safe_path(abs_path):
+    path = os.path.abspath(abs_path)
+    url = pathlib.Path(path).as_uri()
+    # url = "file:///home/$USER/project_folder/html/test_template.html"
+    return url
+
+
 class BasePage(object):
     def __init__(self, driver):
         self.driver = driver
@@ -23,9 +33,15 @@ class BasePage(object):
     def is_title_matches(self):
         return "WhatsApp" in self.driver.title
 
-    def load(self):
-        self.driver.get("https://web.whatsapp.com/")
+    def load(self, url=None):
+        if not url:
+            self.driver.get("https://web.whatsapp.com/")
+        else:
+            self.driver.get(url)
         time.sleep(2.5)
+
+    def refresh(self):
+        self.driver.refresh()
 
     @element_not_found
     def is_welcome_page_available(self):
@@ -52,9 +68,13 @@ class BasePage(object):
         if self.driver.find_element(*ChatLocators.CHAT):
             return True
 
-
-class LoginRememberMeCheckBox(RememberMeCheckBox):
-    locator = "rememberMe"
+    def _find_element(self, locator):
+        try:
+            WebDriverWait(self.driver, 100).until(
+                lambda driver: self.driver.find_element(*locator))
+            return self.driver.find_element(*locator)
+        except NoSuchElementException:
+            return None
 
 
 class LoginPage(BasePage):
@@ -99,7 +119,78 @@ class PanePage(BasePage):
 
 
 class ChatPage(BasePage):
-    pass
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.messages = ChatMessages(driver)
+        self.writer = MessageWriter(driver)
+
+    def refresh(self):
+        self.messages = ChatMessages(self.driver)
+
+    def is_chat_new(self):
+        msgs = self.messages.all()
+        unread_msgs = self.messages.unread()
+        if msgs and unread_msgs:
+            if len(msgs) == len(unread_msgs):
+                # I could check that the msg is not myself.
+                return True
+
+    # Header
+    @property
+    def contact_name(self):
+        return self._find_element(ChatLocators.CHAT_HEADER_CONTACT_NAME).text
+
+    @property
+    def contact_status(self):
+        return self._find_element(ChatLocators.CHAT_HEADER_CONTACT_STATUS).text
+
+    @property
+    def icon(self):
+        return self._find_element(ChatLocators.CHAT_HEADER_CONTACT_ICON).get_attribute("src")
+
+    def is_contact_online(self):
+        status = self._find_element(ChatLocators.CHAT_HEADER_CONTACT_STATUS).text
+        if status and status == "online":
+            return True
+
+    def is_contact_typing(self):
+        # Not yet tested when the status is Typing...
+        statuses = ["yping"]
+        status = self._find_element(ChatLocators.CHAT_HEADER_CONTACT_STATUS)
+        if status and (status in statuses):
+            return True
+
+    @property
+    def menu(self):
+        return self._find_element(ChatLocators.CHAT_HEADER_MENU)
+
+    @property
+    def attach(self):
+        return self._find_element(ChatLocators.CHAT_HEADER_ATTACH)
+
+    @property
+    def search(self):
+        return self._find_element(ChatLocators.CHAT_HEADER_SEARCH)
+
+    # Messages
+    @property
+    def arrow_button(self):
+        return self._find_element(ChatLocators.CHAT_BODY_ARROW_BUTTON)
+
+    @property
+    def arrow_button_notification_qty(self):
+        if self.is_arrow_button_on_screen():
+            qty = self._find_element(ChatLocators.CHAT_BODY_ARROW_BUTTON_NOTIFICATION_QTY).text
+            return int(qty)
+
+    def is_arrow_button_on_screen(self):
+        if self.arrow_button:
+            return True
+
+    def is_notification_in_arrow_button(self):
+        if self.arrow_button:
+            if self.arrow_button_notification_qty:
+                return True
 
 
 class WelcomePage(BasePage):
