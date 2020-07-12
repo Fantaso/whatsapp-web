@@ -4,14 +4,15 @@ from unittest import TestCase
 
 from selenium import webdriver
 
-from simon import pages
+from simon.accounts.pages import LoginPage
+from simon.pages import BasePage
 
 
 class LoginBaseTestCase(TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.maximize_window()
-        self.login_page = pages.LoginPage(self.driver)
+        self.login_page = LoginPage(self.driver)
         self.login_page.load()
 
     def tearDown(self):
@@ -37,7 +38,7 @@ class LoginPageTests(LoginBaseTestCase):
         self.assertTrue(self.login_page.is_remember_me_selected())
 
     def test_can_manually_login_successfully(self):
-        base_page = pages.BasePage(self.driver)
+        base_page = BasePage(self.driver)
         base_page.load()
         # time for you to read QR code and access whatsapp
         time.sleep(8)

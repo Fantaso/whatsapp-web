@@ -2,8 +2,8 @@ import unittest
 
 from selenium.webdriver.common.keys import Keys
 
-from simon import pages
-from simon.locators import ChatLocators
+from simon.chat.locators import ChatLocators  # TODO: this ref should not be coupled with another page
+from simon.chats.pages import PanePage
 from simon.tests.base import LoggedInTestCase
 
 
@@ -13,7 +13,7 @@ class PanePageTests(LoggedInTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.pane_page = pages.PanePage(cls.driver)
+        cls.pane_page = PanePage(cls.driver)
         cls.pane_page.load()
 
     def test_can_get_opened_chats(self):
@@ -57,7 +57,7 @@ class PanePageTests(LoggedInTestCase):
         """
         chat = self.pane_page.get_first_opened_chat_with_notifications()
         chat.click()
-        chat_text_field = self.driver.find_element(*ChatLocators.TEXT_FIELD)
+        chat_text_field = self.driver.find_element(*ChatLocators.CHAT_FOOTER_TEXT_INPUT_FIELD)
         chat_text_field.send_keys("Hi, I am Simon: Carlos's WhatsApp ChatBot!")
         chat_text_field.send_keys(Keys.RETURN)
 

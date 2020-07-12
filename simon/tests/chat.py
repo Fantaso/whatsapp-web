@@ -27,7 +27,7 @@
 import datetime
 import unittest
 
-from simon import pages
+from simon.chat.pages import ChatPage
 from simon.pages import safe_path
 from simon.tests.base import FileBaseTestCase
 
@@ -39,7 +39,7 @@ class ChatPageTests(FileBaseTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.chat_page = pages.ChatPage(cls.driver)
+        cls.chat_page = ChatPage(cls.driver)
         cls.chat_page.load(safe_path(cls.file_path))
 
     def test_whatsapp_title_matches(self):

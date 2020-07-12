@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from selenium import webdriver
 
-from simon import pages
+from simon.accounts.pages import LoginPage
 
 
 class TearDownClass:
@@ -23,7 +23,7 @@ class LoggedInTestCase(TearDownClass, TestCase):
         cls.driver.maximize_window()
 
         # Manually login in
-        cls.login_page = pages.LoginPage(cls.driver)
+        cls.login_page = LoginPage(cls.driver)
         cls.login_page.load()
         time.sleep(7)
 
