@@ -7,7 +7,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from .chat.locators import ChatLocators
 from .chats.locators import PaneLocators
-from .header.locators import NavBarLocators
+from .header.locators import HeaderLocators
 from .locators import WelcomeLocators
 from .search.locators import SearchLocators
 
@@ -53,7 +53,7 @@ class BasePage(object):
 
     @element_not_found
     def is_nav_bar_page_available(self):
-        if self.driver.find_element(*NavBarLocators.BAR):
+        if self.driver.find_element(*HeaderLocators.HEADER):
             return True
 
     @element_not_found
