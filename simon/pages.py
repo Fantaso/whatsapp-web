@@ -48,27 +48,27 @@ class BasePage(object):
 
     @element_not_found
     def is_welcome_page_available(self):
-        if self.driver.find_element(*WelcomeLocators.WELCOME):
+        if self._find_element(WelcomeLocators.WELCOME):
             return True
 
     @element_not_found
     def is_nav_bar_page_available(self):
-        if self.driver.find_element(*HeaderLocators.HEADER):
+        if self._find_element(HeaderLocators.HEADER):
             return True
 
     @element_not_found
     def is_search_page_available(self):
-        if self.driver.find_element(*SearchLocators.SEARCH):
+        if self._find_element(SearchLocators.SEARCH):
             return True
 
     @element_not_found
     def is_pane_page_available(self):
-        if self.driver.find_element(*PaneLocators.PANE):
+        if self._find_element(PaneLocators.PANE):
             return True
 
     @element_not_found
     def is_chat_page_available(self):
-        if self.driver.find_element(*ChatLocators.CHAT):
+        if self._find_element(ChatLocators.CHAT):
             return True
 
     def _find_element(self, locator):
