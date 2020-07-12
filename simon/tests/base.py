@@ -4,14 +4,11 @@ from unittest import TestCase
 from selenium import webdriver
 
 from simon.accounts.pages import LoginPage
+from simon.header.pages import HeaderPage
 
 
 class TearDownClass:
     driver = None
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
 
 
 class LoggedInTestCase(TearDownClass, TestCase):
@@ -27,6 +24,12 @@ class LoggedInTestCase(TearDownClass, TestCase):
         cls.login_page.load()
         time.sleep(7)
 
+    @classmethod
+    def tearDownClass(cls):
+        header_page = HeaderPage(cls.driver)
+        header_page.logout()
+        cls.driver.quit()
+
 
 class FileBaseTestCase(TearDownClass, TestCase):
     driver = None
@@ -35,3 +38,7 @@ class FileBaseTestCase(TearDownClass, TestCase):
     def setUpClass(cls):
         cls.driver = webdriver.Firefox()
         cls.driver.maximize_window()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
