@@ -25,11 +25,14 @@
 # can record a voice from microphone
 #######################################################
 import datetime
+import time
 import unittest
+import uuid as uuid
 
 from simon.chat.pages import ChatPage
+from simon.chats.pages import PanePage
 from simon.pages import safe_path
-from simon.tests.base import FileBaseTestCase
+from simon.tests.base import LoggedInTestCase, FileBaseTestCase
 
 
 class ChatPageTests(FileBaseTestCase):
@@ -50,8 +53,8 @@ class ChatPageTests(FileBaseTestCase):
         # TODO: provide html templates for distinct cases
         self.assertEqual(self.chat_page.contact_name, "Rastri")
         self.assertEqual(self.chat_page.contact_status, "online")
-        self.assertEqual(self.chat_page.icon,
-                         "file:///home/fantaso/github/el_simon/simon/tests/html/rastri_chat_template_full_files/pp.jpeg")
+        icon_file = "file:///home/fantaso/github/el_simon/simon/tests/html/rastri_chat_template_full_files/pp.jpeg"
+        self.assertEqual(self.chat_page.icon, icon_file)
         self.assertTrue(self.chat_page.is_contact_online())
         self.assertFalse(self.chat_page.is_contact_typing())
 
@@ -61,42 +64,6 @@ class ChatPageTests(FileBaseTestCase):
         self.assertEqual(self.chat_page.menu.get_attribute("title"), "Menu")
         self.assertEqual(self.chat_page.attach.get_attribute("title"), "Attach")
         self.assertEqual(self.chat_page.search.get_attribute("title"), "Search…")
-
-    # WRITER
-    # ## 5th
-    def test_writer_can_send_a_message_in_the_chat_with_groove_animated(self):
-        """Enable when it can be tested"""
-        writer = self.chat_page.writer
-        # can write and send a message
-        writer.send_msg("Testing sending unique msg. 725662789")
-        # It might not work.
-        # Try refreshing DOM elements self.chat_page.refresh()
-        # or instanciating the chatpage again
-        # msg = self.chat_page.messages.newest()
-        # self.assertEqual(msg.text, "Testing sending unique msg. 725662789")
-        # self.assertEqual(msg.status, "Delivered")
-        # self.assertNotEqual(msg.text, "Failed")
-
-    def test_writer_can_send_a_multiline_message_in_the_chat_with_groove_animated(self):
-        """Enable when it can be tested"""
-        writer = self.chat_page.writer
-        # can write and send a message
-        writer.send_msg("Line # 1\nLine # 2")
-        # It might not work.
-        # Try refreshing DOM elements self.chat_page.refresh()
-        # or instanciating the chatpage again
-        # msg = self.chat_page.messages.newest()
-        # self.assertEqual(msg.text, "Line # 1\nLine # 2")
-        # self.assertEqual(msg.status, "Delivered")
-        # self.assertNotEqual(msg.text, "Failed")
-
-    # # can send a multiline message
-    # writer.send("Testing msg line one.\nTesting msg line two.")
-    # msg = chat_page.messages.newest()
-    # msg.text == "Testing msg line one.\nTesting msg line two."
-    # msg.status == "sent" or msg.status == "delivered"
-    # msg.status != "failed"
-    # ## 6th
 
     # SEARCHER
     # # can search for a message (by: text, time(approx, range), type)
@@ -230,6 +197,58 @@ class ChatPageTests(FileBaseTestCase):
                         "Not detecting the amount of new messages notifications on the arrow bottom on the chat screen")
         self.assertEqual(self.chat_page.arrow_button_notification_qty, 4,
                          "Not detecting the 4 new messages notifications on the arrow bottom on the chat screen")
+
+
+class InteractiveWriterTests(LoggedInTestCase):
+    WAIT_TIME = 2
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        medea_chat = PanePage(cls.driver)
+        medea_chat.get_opened_chat("Medea").click()
+        cls.chat_page = ChatPage(cls.driver)
+
+        cls.successful_msg_status = ["Sent", "Delivered"]
+
+    def test_writer_can_send_a_message_in_the_chat(self):
+        writer = self.chat_page.writer
+        uid = str(uuid.uuid4())
+        writer.send_msg(f"Testing sending a unique msg. {uid}")
+
+        # small time for the message to be "Delivered" or "Sent" instead "Pending"
+        time.sleep(self.WAIT_TIME)
+        msg = self.chat_page.messages.newest()
+        self.assertEqual(msg.text, f"Testing sending a unique msg. {uid}")
+        self.assertIn(msg.status, self.successful_msg_status)
+        self.assertNotEqual(msg.text, "Failed")
+
+    def test_writer_can_send_a_multiline_message_in_the_chat(self):
+        multiline_msg = ["Line # 1", "Line # 2"]
+        writer = self.chat_page.writer
+        writer.send_multiline_msg(multiline_msg)
+
+        # small time for the message to be "Delivered" or "Sent" instead "Pending"
+        time.sleep(self.WAIT_TIME)
+        msg = self.chat_page.messages.newest()
+
+        self.assertEqual(msg.text, "Line # 1\nLine # 2")
+        self.assertIn(msg.status, self.successful_msg_status)
+        self.assertNotEqual(msg.text, "Failed")
+
+    def test_writer_can_send_a_message_in_the_chat_animated(self):
+        writer = self.chat_page.writer
+        uid = str(uuid.uuid4())
+        writer.send_msg_animated(f"Testing sending a unique animated msg. {uid}",
+                                 groove=0.25)
+
+        # small time for the message to be "Delivered" or "Sent" instead "Pending"
+        time.sleep(self.WAIT_TIME)
+        # self.chat_page.refresh()
+        msg = self.chat_page.messages.newest()
+        self.assertEqual(msg.text, f"Testing sending a unique animated msg. {uid}")
+        self.assertIn(msg.status, self.successful_msg_status)
+        self.assertNotEqual(msg.text, "Failed")
 
 
 if __name__ == "__main__":

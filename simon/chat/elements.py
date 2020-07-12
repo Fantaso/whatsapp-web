@@ -1,7 +1,9 @@
 import datetime
 import time
+from typing import List
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -159,13 +161,26 @@ class MessageWriter(object):
     def send_msg(self, msg: str):
         text_input = self.__find_element(ChatLocators.CHAT_FOOTER_TEXT_INPUT_FIELD)
         if text_input and msg:
-            self.send_msg_animated(text_input, msg)
+            text_input.send_keys(msg)
+            time.sleep(1)
+            text_input.send_keys(Keys.RETURN)
 
-    def send_msg_animated(self, input_element, msg, groove=0.22):
+    def send_multiline_msg(self, msgs: List[str]):
+        text_input = self.__find_element(ChatLocators.CHAT_FOOTER_TEXT_INPUT_FIELD)
+        if text_input and msgs:
+            time.sleep(1)
+            for msg in msgs:
+                text_input.send_keys(msg)
+                # press SHIFT + ENTER (for new line)
+                ActionChains(self.driver).key_down(Keys.SHIFT).send_keys(Keys.RETURN).key_up(Keys.SHIFT).perform()
+            text_input.send_keys(Keys.RETURN)
+
+    def send_msg_animated(self, msg, groove=0.22):
+        text_input = self.__find_element(ChatLocators.CHAT_FOOTER_TEXT_INPUT_FIELD)
         for char in msg:
-            input_element.send_keys(char)
+            text_input.send_keys(char)
             time.sleep(groove)
-        input_element.send_keys(Keys.RETURN)
+        text_input.send_keys(Keys.RETURN)
 
     def __find_element(self, locator):
         try:
