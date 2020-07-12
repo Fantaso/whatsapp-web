@@ -10,3 +10,8 @@ class PanePage(BasePage):
         for chat in self.opened_chats:
             if chat.has_notifications():
                 return chat
+
+    def get_opened_chat(self, name):
+        for opened_chat in self.opened_chats:
+            if name == opened_chat.name:
+                return opened_chat
