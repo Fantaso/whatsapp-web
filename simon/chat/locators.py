@@ -19,6 +19,7 @@ class ChatLocators(object):
     CHAT_BODY_MSG_CONTACT_AND_DATETIME = (By.CSS_SELECTOR, "._3sKvP.wQZ0F ._274yw div.copyable-text")
     CHAT_BODY_MSG_STATUS = (By.CSS_SELECTOR, "._3sKvP.wQZ0F ._274yw div._2frDn ._1qPwk span")
     CHAT_BODY_MSG_TEXT = (By.CSS_SELECTOR, "._3sKvP.wQZ0F ._274yw div.copyable-text ._3Whw5 span")
+    CHAT_BODY_MSG_ARROW_MY_OWN_MSG = (By.CSS_SELECTOR, "._4tndQ._1q11a ._2oA--")
     CHAT_BODY_MSG_ARROW = (By.CSS_SELECTOR, "._2nBjH._1q11a ._2oA--")
     # -> THIS ARE OUT OF THE CONTEXT OF THE HTML ELEMENT.
     CHAT_BODY_MSG_ARROW_POP_MENU = (By.CSS_SELECTOR, "._2s_eZ")
@@ -26,6 +27,11 @@ class ChatLocators(object):
     CHAT_BODY_MSG_ARROW_POP_MENU_FORWARD = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(2) div")
     CHAT_BODY_MSG_ARROW_POP_MENU_STAR = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(3) div")
     CHAT_BODY_MSG_ARROW_POP_MENU_DELETE = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(4) div")
+    CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_MSG_INFO = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(1) div")
+    CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_REPLY = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(2) div")
+    CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_FORWARD = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(3) div")
+    CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_STAR = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(4) div")
+    CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_DELETE = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(5) div")
     # <- END
     CHAT_BODY_UNREAD_MESSAGE = (By.CSS_SELECTOR, "._9WQEN")
     CHAT_BODY_ARROW_BUTTON = (By.CSS_SELECTOR, "._1YcH-._1-MYr")

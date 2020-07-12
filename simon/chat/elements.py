@@ -11,8 +11,9 @@ from simon.chat.locators import ChatLocators
 
 
 class Message:
-    def __init__(self, element=None):
+    def __init__(self, element=None, driver=None):
         self.element = element
+        self.driver = driver
 
     def find_element(self, locator):
         """
@@ -66,19 +67,26 @@ class Message:
             ).get_attribute("data-pre-plain-text")
 
     def reply(self, msg: str):
+        """Only works to reply msgs from the contact.
+        DO NOT USE IT to reply your own msg. (Different css selectors needed)"""
         if msg:
-            # the_msg = self.hover(self.element)
-            # msg_arrow_menu = self.find_element(CHAT_MSG_ARROW)
-            # msg_arrow_menu = self.hover(CHAT_MSG_ARROW)
-            # msg_arrow_menu.click()
+            # Hover near by the reply arrow menu
+            msg_text = self.find_element(ChatLocators.CHAT_BODY_MSG_TEXT)
+            hover = ActionChains(self.driver).move_to_element(msg_text)
+            hover.perform()
 
-            ## BOUND OUT OF html element context and the whole html page
-            ## MAYBE in the base page context.
-            # reply = self.find_element(CHAT_MSG_ARROW_POP_MENU_REPLY)
-            # reply.click()
+            # -> BOUND OUT OF html element context and the whole html page
+            #    MAYBE in the base page context.
+            # get arrow and click on it
+            msg_arrow_menu = self.driver.find_element(*ChatLocators.CHAT_BODY_MSG_ARROW)
+            msg_arrow_menu.click()
 
-            # writer = self.chat_page.writer
-            # writer.send(msg)
+            reply_button = self.driver.find_element(*ChatLocators.CHAT_BODY_MSG_ARROW_POP_MENU_REPLY)
+            reply_button.click()
+
+            writer = MessageWriter(self.driver)
+            writer.send_msg(msg)
+            # <- END OUT OF BOUND
             return "Coders on break!"
 
     def __repr__(self):
@@ -96,7 +104,7 @@ class ChatMessages:
         self.driver = driver
 
     def all(self):
-        order_by_oldest = [self.child_class(e) for e in self.__find_elements()]
+        order_by_oldest = [self.child_class(e, self.driver) for e in self.__find_elements()]
         order_by_newest = order_by_oldest[::-1]
         return order_by_newest
 
