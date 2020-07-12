@@ -194,14 +194,14 @@ class ChatPageTests(FileBaseTestCase):
 class InteractiveBaseTestCase(LoggedInTestCase):
     WAIT_TIME = 2
     OPENED_CHAT_CONTACT_NAME = "Medea"
+    SUCCESSFUL_MSG_STATUS = ["Sent", "Delivered"]
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        medea_chat = PanePage(cls.driver)
-        medea_chat.get_opened_chat(cls.OPENED_CHAT_CONTACT_NAME).click()
+        pane_page = PanePage(cls.driver)
+        pane_page.get_opened_chat(cls.OPENED_CHAT_CONTACT_NAME).click()
         cls.chat_page = ChatPage(cls.driver)
-        cls.successful_msg_status = ["Sent", "Delivered"]
 
 
 class InteractiveWriterTests(InteractiveBaseTestCase):
@@ -215,7 +215,7 @@ class InteractiveWriterTests(InteractiveBaseTestCase):
         time.sleep(self.WAIT_TIME)
         msg = self.chat_page.messages.newest()
         self.assertEqual(msg.text, f"Testing sending a unique msg. {uid}")
-        self.assertIn(msg.status, self.successful_msg_status)
+        self.assertIn(msg.status, self.SUCCESSFUL_MSG_STATUS)
         self.assertNotEqual(msg.text, "Failed")
 
     def test_writer_can_send_a_multiline_message_in_the_chat(self):
@@ -227,7 +227,7 @@ class InteractiveWriterTests(InteractiveBaseTestCase):
         time.sleep(self.WAIT_TIME)
         msg = self.chat_page.messages.newest()
         self.assertEqual(msg.text, "Line # 1\nLine # 2")
-        self.assertIn(msg.status, self.successful_msg_status)
+        self.assertIn(msg.status, self.SUCCESSFUL_MSG_STATUS)
         self.assertNotEqual(msg.text, "Failed")
 
     def test_writer_can_send_a_message_in_the_chat_animated(self):
@@ -240,7 +240,7 @@ class InteractiveWriterTests(InteractiveBaseTestCase):
         time.sleep(self.WAIT_TIME)
         msg = self.chat_page.messages.newest()
         self.assertEqual(msg.text, f"Testing sending a unique animated msg. {uid}")
-        self.assertIn(msg.status, self.successful_msg_status)
+        self.assertIn(msg.status, self.SUCCESSFUL_MSG_STATUS)
         self.assertNotEqual(msg.text, "Failed")
 
 
@@ -248,7 +248,7 @@ class InteractiveTests(InteractiveBaseTestCase):
 
     def test_can_reply_to_a_specific_message(self):
         """
-        Only working to reply any msg that is comming from your contact.
+        Only working to reply any msg that is coming from your contact.
         To reply a msg you send yourself, you need to use diff css selectors and so on.
         """
         msg = self.chat_page.messages.newest()
@@ -257,6 +257,8 @@ class InteractiveTests(InteractiveBaseTestCase):
 
         # small time for the message to be "Delivered" or "Sent" instead "Pending"
         time.sleep(self.WAIT_TIME)
+        # TODO: IMPORTANT.. getting the newest() does not ensure the msg to reply will be from your contact
+        #       as messages returns all messages found in the chat
         new_msg = self.chat_page.messages.newest()
         self.assertEqual(new_msg.text, f"Testing a unique reply to a specific msg. {uid}")
 
