@@ -96,30 +96,44 @@ class Message:
         return f"{self.contact}: '({self.text})'"
 
 
+class OnlyFilterByContact(Exception):
+    pass
+
+
 class ChatMessages:
-    locator = ChatLocators.CHAT_BODY_MSGS
     child_class = Message
 
     def __init__(self, driver):
         self.driver = driver
 
-    def all(self):
-        order_by_oldest = [self.child_class(e, self.driver) for e in self.__find_elements()]
+    def all(self, filterby: str = None):
+        locator = self.get_correct_locator(filterby)
+        order_by_oldest = [self.child_class(e, self.driver) for e in self.__find_elements(locator)]
         order_by_newest = order_by_oldest[::-1]
         return order_by_newest
 
-    def newest(self, qty: int = None):
-        msgs = self.all()
+    def get_correct_locator(self, filterby):
+        if not filterby:
+            return ChatLocators.CHAT_BODY_MSGS
+        if filterby == 'contact':
+            return ChatLocators.CHAT_BODY_MSGS_CONTACT
+        if filterby == 'myself':
+            return ChatLocators.CHAT_BODY_MSGS_MYSELF
+        else:
+            raise OnlyFilterByContact("For now we just can filter by contact name")
+
+    def newest(self, qty: int = None, filterby=None):
+        msgs = self.all(filterby)
         return self.__get_correct_qty(qty, msgs)
 
-    def oldest(self, qty: int = None):
-        msgs = self.all()[::-1]
+    def oldest(self, qty: int = None, filterby=None):
+        msgs = self.all(filterby)[::-1]
         return self.__get_correct_qty(qty, msgs)
 
     def unread(self):
         qty = self.unread_qty()
         if qty:
-            unread_msgs_by_newest = self.all()[:qty]
+            unread_msgs_by_newest = self.all(filterby='contact')[:qty]
             unread_msgs_by_oldest = unread_msgs_by_newest[::-1]
             return unread_msgs_by_oldest
         return []
@@ -131,13 +145,13 @@ class ChatMessages:
             qty = text.split(" ", 1)[0]
             return int(qty)
 
-    def __find_elements(self):
+    def __find_elements(self, locator):
         # TODO: THIS DEEP i do not have to worry about the real time
         #       state of the messages. It should hangle upper level.
         #       OR YES I DO? ANALYSE WHEN SEEN!
         WebDriverWait(self.driver, 100).until(
-            lambda driver: self.driver.find_elements(*self.locator))
-        elements = self.driver.find_elements(*self.locator)
+            lambda driver: self.driver.find_elements(*locator))
+        elements = self.driver.find_elements(*locator)
         return [e for e in elements]
 
     def __find_element(self, locator):

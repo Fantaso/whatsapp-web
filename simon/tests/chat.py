@@ -175,6 +175,126 @@ class ChatPageTests(FileBaseTestCase):
         #     self.assertGreaterEqual(msg.date, comparing_date)
         #     comparing_date = msg.date
 
+    def test_can_read_most_recent_message_from_contact(self):
+        msg = self.chat_page.messages.newest(filterby='contact')
+        self.assertEqual(msg.contact, "Rastri")
+        self.assertEqual(msg.text, "Lslsls")
+        self.assertEqual(msg.date, datetime.datetime(2020, 7, 8, 20, 33, 00))
+
+    def test_can_read_oldest_message_from_contact(self):
+        msg = self.chat_page.messages.oldest(filterby='contact')
+        self.assertEqual(msg.contact, "Rastri")
+        self.assertEqual(msg.text, "nena aun en vzla?")
+        self.assertEqual(msg.date, datetime.datetime(2019, 1, 29, 12, 46, 00))
+
+    def test_can_read_most_recent_message_from_myself(self):
+        msg = self.chat_page.messages.newest(filterby='myself')
+        self.assertEqual(msg.contact, "CmrH")
+        self.assertEqual(msg.text, "Verga loco.. se me borraron 4 manda 4 más ahí.")
+        self.assertEqual(msg.date, datetime.datetime(2020, 7, 8, 20, 28, 00))
+
+    def test_can_read_oldest_message_from_myself(self):
+        msg = self.chat_page.messages.oldest(filterby='myself')
+        self.assertEqual(msg.contact, "CmrH")
+        self.assertEqual(msg.text, "Mi amor")
+        self.assertEqual(msg.date, datetime.datetime(2019, 1, 29, 18, 55, 00))
+
+    def test_can_read_ten_msgs_order_by_most_recent_from_contact(self):
+        msgs = self.chat_page.messages.newest(10, filterby='contact')
+
+        self.assertEqual(len(msgs), 10)
+
+        newest = msgs[0]
+        fifth = msgs[4]
+        tenth = msgs[9]
+
+        self.assertEqual(newest.contact, "Rastri")
+        self.assertEqual(newest.text, "Lslsls")
+        self.assertEqual(newest.date, datetime.datetime(2020, 7, 8, 20, 33, 00))
+
+        self.assertEqual(fifth.contact, "Rastri")
+        self.assertEqual(fifth.text, "Loca")
+        self.assertEqual(fifth.date, datetime.datetime(2020, 7, 8, 20, 25, 00))
+
+        self.assertEqual(tenth.contact, "Rastri")
+        self.assertEqual(tenth.text, "Ha ok")
+        self.assertEqual(tenth.date, datetime.datetime(2020, 7, 7, 18, 11, 00))
+
+    def test_can_read_ten_msgs_order_by_oldest_from_contact(self):
+        msgs = self.chat_page.messages.oldest(10, filterby='contact')
+
+        self.assertEqual(len(msgs), 10)
+
+        oldest = msgs[0]
+        third = msgs[2]
+        fourth = msgs[3]
+
+        self.assertEqual(oldest.contact, "Rastri")
+        self.assertEqual(oldest.text, "nena aun en vzla?")
+        self.assertEqual(oldest.date, datetime.datetime(2019, 1, 29, 12, 46, 00))
+
+        self.assertEqual(third.contact, "Rastri")
+        self.assertEqual(third.text, "como viste la cosa")
+        self.assertEqual(third.date, datetime.datetime(2019, 1, 29, 19, 15, 00))
+
+        self.assertEqual(fourth.contact, "Rastri")
+        self.assertEqual(fourth.text, "a que loco")
+        self.assertEqual(fourth.date, datetime.datetime(2019, 1, 29, 19, 19, 00))
+
+    def test_can_ten_all_msgs_order_by_most_recent_from_myself(self):
+        msgs = self.chat_page.messages.newest(10, filterby='myself')
+
+        self.assertEqual(len(msgs), 10)
+
+        newest = msgs[0]
+        fourth = msgs[3]
+        seventh = msgs[6]
+
+        self.assertEqual(newest.contact, "CmrH")
+        self.assertEqual(newest.text, "Verga loco.. se me borraron 4 manda 4 más ahí.")
+        self.assertEqual(newest.date, datetime.datetime(2020, 7, 8, 20, 28, 00))
+
+        self.assertEqual(fourth.contact, "CmrH")
+        self.assertEqual(fourth.text, "Ya la cosa.")
+        self.assertEqual(fourth.date, datetime.datetime(2020, 7, 7, 16, 47, 00))
+
+        self.assertEqual(seventh.contact, "CmrH")
+        self.assertEqual(seventh.text, "Jajajaja")
+        self.assertEqual(seventh.date, datetime.datetime(2020, 7, 6, 15, 1, 00))
+
+    def test_can_read_all_msgs_order_by_oldest_from_myself(self):
+        msgs = self.chat_page.messages.oldest(10, filterby='myself')
+
+        self.assertEqual(len(msgs), 10)
+
+        oldest = msgs[0]
+        sixth = msgs[5]
+        ninth = msgs[8]
+
+        self.assertEqual(oldest.contact, "CmrH")
+        self.assertEqual(oldest.text, "Mi amor")
+        self.assertEqual(oldest.date, datetime.datetime(2019, 1, 29, 18, 55, 00))
+
+        self.assertEqual(sixth.contact, "CmrH")
+        self.assertEqual(sixth.text, "Jjaa")
+        self.assertEqual(sixth.date, datetime.datetime(2019, 1, 29, 19, 18, 00))
+
+        self.assertEqual(ninth.contact, "CmrH")
+        self.assertEqual(ninth.text, "Si vaca..")
+        self.assertEqual(ninth.date, datetime.datetime(2019, 1, 30, 18, 6, 00))
+
+    def test_can_read_all_msgs_order_by_most_recent_from_contact(self):
+        msgs = self.chat_page.messages.all(filterby='contact')
+        self.assertEqual(len(msgs), 868)
+        msg = msgs[0]
+        self.assertEqual(msg.text, "Lslsls")
+
+    def test_can_read_all_msgs_order_by_most_recent_from_myself(self):
+        msgs = self.chat_page.messages.all(filterby='myself')
+        self.assertEqual(len(msgs), 1162)
+        msg = msgs[0]
+        self.assertEqual(msg.text, "Verga loco.. se me borraron 4 manda 4 más ahí.")
+
     def test_can_detect_if_chat_is_completely_new(self):
         # can detect if current chat is fresh (new) chat initiated by contact/client
         self.assertFalse(self.chat_page.is_chat_new())
@@ -193,7 +313,7 @@ class ChatPageTests(FileBaseTestCase):
 
 class InteractiveBaseTestCase(LoggedInTestCase):
     WAIT_TIME = 2
-    OPENED_CHAT_CONTACT_NAME = "Medea"
+    OPENED_CHAT_CONTACT_NAME = "+58 412-7624636"
     SUCCESSFUL_MSG_STATUS = ["Sent", "Delivered"]
 
     @classmethod
@@ -251,16 +371,19 @@ class InteractiveTests(InteractiveBaseTestCase):
         Only working to reply any msg that is coming from your contact.
         To reply a msg you send yourself, you need to use diff css selectors and so on.
         """
-        msg = self.chat_page.messages.newest()
+        # Test that it can reply just to text messages.
+        # voice or videos is diffrernt for the css selector
+
+        msg = self.chat_page.messages.newest(filterby='contact')
         uid = str(uuid.uuid4())
-        msg.reply(f"Testing a unique reply to a specific msg. {uid}")
+        msg.reply(f"Testing a unique reply to a specific msg. {uid} filterby by contact.")
 
         # small time for the message to be "Delivered" or "Sent" instead "Pending"
         time.sleep(self.WAIT_TIME)
         # TODO: IMPORTANT.. getting the newest() does not ensure the msg to reply will be from your contact
         #       as messages returns all messages found in the chat
         new_msg = self.chat_page.messages.newest()
-        self.assertEqual(new_msg.text, f"Testing a unique reply to a specific msg. {uid}")
+        self.assertEqual(new_msg.text, f"Testing a unique reply to a specific msg. {uid} filterby by contact.")
 
 
 if __name__ == "__main__":
