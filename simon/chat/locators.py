@@ -15,9 +15,19 @@ class ChatLocators(object):
 
     # READING MSGS
     CHAT_BODY = (By.CSS_SELECTOR, "#main ._2-aNW .z_tTQ")
+    # all
     CHAT_BODY_MSGS = (By.CSS_SELECTOR, "._2hqOq.message-in, ._2hqOq.message-out")
+    # filtered by "contact"
     CHAT_BODY_MSGS_MYSELF = (By.CSS_SELECTOR, "._2hqOq.message-out")
     CHAT_BODY_MSGS_CONTACT = (By.CSS_SELECTOR, "._2hqOq.message-in")
+    # filtered by "type"
+    CHAT_BODY_MSGS_TYPE_VOICE_RECORDING = (By.CSS_SELECTOR, "._3D5PJ")
+    CHAT_BODY_MSGS_TYPE_VIDEO = (By.CSS_SELECTOR, ".S9d8c")
+    CHAT_BODY_MSGS_TYPE_IMAGE = (By.CSS_SELECTOR, ".xOg_4")
+    CHAT_BODY_MSGS_TYPE_GIFF = (By.CSS_SELECTOR, "._3gBQS")
+    CHAT_BODY_MSGS_TYPE_AUDIO = (By.CSS_SELECTOR, "")
+
+    # message details
     CHAT_BODY_MSG_CONTACT_AND_DATETIME = (By.CSS_SELECTOR, "._3sKvP.wQZ0F ._274yw div.copyable-text")
     CHAT_BODY_MSG_STATUS = (By.CSS_SELECTOR, "._3sKvP.wQZ0F ._274yw div._2frDn ._1qPwk span")
     CHAT_BODY_MSG_TEXT = (By.CSS_SELECTOR, "._3sKvP.wQZ0F ._274yw div.copyable-text ._3Whw5 span")
@@ -30,8 +40,7 @@ class ChatLocators(object):
     CHAT_BODY_MSG_ARROW_POP_MENU_FORWARD = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(2) div")
     CHAT_BODY_MSG_ARROW_POP_MENU_STAR = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(3) div")
     CHAT_BODY_MSG_ARROW_POP_MENU_DELETE = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(4) div")
-    CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_MSG_INFO = (
-    By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(1) div")
+    CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_MSG_INFO = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(1) div")
     CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_REPLY = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(2) div")
     CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_FORWARD = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(3) div")
     CHAT_BODY_MSG_ARROW_POP_MENU_MY_OWN_MSG_STAR = (By.CSS_SELECTOR, "._2s_eZ ._1N-3y.eP_pD._36Osw:nth-child(4) div")
