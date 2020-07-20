@@ -247,6 +247,7 @@ in the repo_
 | :- | :-: | :- |
 | Python                    | ![language][python]                   | Language |
 | Selenium                  | ![selenium][selenium]                 | Browser Automation |
+| Whatsapp Web              | ![whatsapp][whatsapp]                 | Chat Service |
 
 <br><br>
 
@@ -272,3 +273,4 @@ Get in touch -–> [fantaso][fantaso]
 <!-- images -->
 [python]: readme/python.png
 [selenium]: readme/selenium.png
+[whatsapp]: readme/whatsapp.png
