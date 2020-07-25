@@ -95,8 +95,8 @@ driver.maximize_window()
 #       and uncheck the remember check box
 #       (Get your phone ready to read the QR code)
 login_page = LoginPage(driver)
-login_page.remember_me = False
 login_page.load()
+login_page.remember_me = False
 time.sleep(7)
 
 
