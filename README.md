@@ -36,6 +36,7 @@ Some functionalities:
         - B) reading new message(s)
         - C) replying a message
         - D) send a message
+- #### Installation & Usage
 - #### Code Examples
     - Login into whatsapp web, check you are logged in & logout
     - Get all opened chats, go into the chat, read the last 10 messages from your friend and reply to the most recent message
@@ -71,6 +72,11 @@ Simon can detect new message(s), read them, analyse it and reply if needed.
  1. get contact_send_message
  2. write message
  3. press enter to send msg.
+
+
+## Installation & Usage
+Install by simple typing `pip install whatsapp-web` and
+in your python file you can use it `import simon`
 
 
 ## Code Examples
